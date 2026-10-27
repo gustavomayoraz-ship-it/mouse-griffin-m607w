@@ -1,0 +1,8 @@
+# Configuración del Mouse Griffin M607W
+# Duración: 1ms | Máximo 25 CPS
+
+left=mouse,left,intervalo,5,5,0,0,0,0
+right=mouse,right,intervalo,5,5,0,0,0,0
+middle=mouse,middle,intervalo,5,5,0,0,0,0
+x1=mouse,left,intervalo,5,0,0,1,0,0
+x2=mouse,left,cps,0.04,25,0,1,0,0
