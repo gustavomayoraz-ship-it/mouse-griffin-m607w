@@ -1,0 +1,6 @@
+pydirectinput
+pynput
+psutil
+pystray
+Pillow
+pywin32
