@@ -41,10 +41,16 @@ SYSTEM_TRAY_DISPONIBLE = False
 MAX_CPS = 25
 
 # Dependencias que necesita esta app: (nombre a mostrar, nombre de import, paquete pip)
-# Carpeta donde viven los archivos de la app (config.txt): junto al .exe cuando
-# está empaquetado con PyInstaller; junto a mouse.py cuando corre como script.
+# Carpeta donde se guarda config.txt:
+#  - Instalada (.exe en Archivos de programa): %APPDATA%\MouseGriffin, porque
+#    Archivos de programa no es escribible sin permisos de administrador.
+#  - Como script (mouse.py): junto al propio mouse.py.
 if getattr(sys, "frozen", False):
-    DIRECTORIO_APP = os.path.dirname(sys.executable)
+    DIRECTORIO_APP = os.path.join(os.environ.get("APPDATA", os.path.dirname(sys.executable)), "MouseGriffin")
+    try:
+        os.makedirs(DIRECTORIO_APP, exist_ok=True)
+    except OSError:
+        DIRECTORIO_APP = os.path.dirname(sys.executable)
 else:
     DIRECTORIO_APP = os.path.dirname(os.path.abspath(__file__))
 
