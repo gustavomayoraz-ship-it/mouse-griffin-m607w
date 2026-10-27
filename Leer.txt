@@ -1,2 +1,2 @@
-Para poderlo usar se deve instalar:
-python-3.13.2 -- 32/64 bits
+Para poderlo usar se debe instalar:
+python-3.14 -- 64 bits
