@@ -40,20 +40,29 @@ SYSTEM_TRAY_DISPONIBLE = False
 # así que ~45 CPS es el techo técnico; 25 deja margen de seguridad entre clics)
 MAX_CPS = 25
 
-# Dependencias que necesita esta app: (nombre a mostrar, nombre de import, paquete pip)
-# Carpeta donde se guarda config.txt:
-#  - Instalada (.exe en Archivos de programa): %APPDATA%\MouseGriffin, porque
-#    Archivos de programa no es escribible sin permisos de administrador.
-#  - Como script (mouse.py): junto al propio mouse.py.
-if getattr(sys, "frozen", False):
-    DIRECTORIO_APP = os.path.join(os.environ.get("APPDATA", os.path.dirname(sys.executable)), "MouseGriffin")
+# Carpeta donde se guarda config.txt: junto al programa si se puede escribir ahi; si no
+# (instalado en Archivos de programa, donde un usuario normal no puede escribir),
+# en %APPDATA%\MouseGriffin.
+def _carpeta_escribible(carpeta):
     try:
-        os.makedirs(DIRECTORIO_APP, exist_ok=True)
+        os.makedirs(carpeta, exist_ok=True)
+        prueba = os.path.join(carpeta, ".prueba_escritura")
+        with open(prueba, "w") as f:
+            f.write("ok")
+        os.remove(prueba)
+        return True
     except OSError:
-        DIRECTORIO_APP = os.path.dirname(sys.executable)
-else:
-    DIRECTORIO_APP = os.path.dirname(os.path.abspath(__file__))
+        return False
 
+
+_BASE_APP = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else os.path.dirname(os.path.abspath(__file__))
+if _carpeta_escribible(_BASE_APP):
+    DIRECTORIO_APP = _BASE_APP
+else:
+    DIRECTORIO_APP = os.path.join(os.environ.get("APPDATA", _BASE_APP), "MouseGriffin")
+    os.makedirs(DIRECTORIO_APP, exist_ok=True)
+
+# Dependencias que necesita esta app: (nombre a mostrar, nombre de import, paquete pip)
 DEPENDENCIAS_APP = [
     ("pydirectinput", "pydirectinput", "pydirectinput"),
     ("pynput", "pynput", "pynput"),

@@ -1,0 +1,31 @@
+Mouse Griffin M607W - Instalador
+================================
+
+Que hace
+--------
+Instala el programa en Windows sin que tengas que instalar nada antes:
+  1) Python 3.14 completo (con tkinter y pip), armado con los componentes oficiales de python.org en la carpeta
+     del programa; no se registra en Windows ni toca los Python que ya tengas
+  2) El programa (mouse.py)
+  3) Las librerias: pydirectinput, pynput, psutil, pystray, Pillow, pywin32
+Se instala en  C:\Program Files\Mouse Griffin M607W  (pide permisos de administrador),
+crea accesos directos (Escritorio y menu Inicio) y queda en
+Configuracion > Aplicaciones, desde donde se desinstala (borra la carpeta entera, con su Python).
+La configuracion de cada usuario se guarda en %APPDATA%\MouseGriffin.
+
+Usarlo
+------
+  MouseGriffin-Setup.exe  (se baja de la seccion Releases de GitHub)
+  o, sin armar el .exe: doble clic en "Instalar Mouse Griffin.bat" (necesita Python con tkinter)
+
+Armar el .exe
+-------------
+  Dentro de _archivos: doble clic en  Construir_exe.bat  ->  queda  _archivos\dist\MouseGriffin-Setup.exe
+  Ese .exe es el que se sube a GitHub en "Releases" (no dentro del repositorio).
+
+Opciones (al final del comando)
+-------------------------------
+  --ventana       muestra la ventana aunque ya este todo instalado
+  --sin-ventana   instala sin ventana (pruebas); el detalle queda en cache\instalacion.log
+  --no-lanzar     no abre el programa al terminar
+  --carpeta RUTA  instala en esa carpeta en vez de Archivos de programa
