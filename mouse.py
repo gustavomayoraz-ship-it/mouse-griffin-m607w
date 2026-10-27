@@ -41,6 +41,13 @@ SYSTEM_TRAY_DISPONIBLE = False
 MAX_CPS = 25
 
 # Dependencias que necesita esta app: (nombre a mostrar, nombre de import, paquete pip)
+# Carpeta donde viven los archivos de la app (config.txt): junto al .exe cuando
+# está empaquetado con PyInstaller; junto a mouse.py cuando corre como script.
+if getattr(sys, "frozen", False):
+    DIRECTORIO_APP = os.path.dirname(sys.executable)
+else:
+    DIRECTORIO_APP = os.path.dirname(os.path.abspath(__file__))
+
 DEPENDENCIAS_APP = [
     ("pydirectinput", "pydirectinput", "pydirectinput"),
     ("pynput", "pynput", "pynput"),
@@ -210,6 +217,8 @@ class VentanaVerificacion:
             return False
 
     def _instalar_paquete(self, package_name):
+        if getattr(sys, "frozen", False):
+            return False  # en el .exe no hay pip: las dependencias van incluidas
         try:
             cmd = [sys.executable, "-m", "pip", "install", package_name,
                    "--quiet", "--no-warn-script-location"]
@@ -1768,7 +1777,7 @@ class MouseConfigApp:
     def guardar_configuracion(self):
         """Guarda la configuración en archivo"""
         try:
-            directorio_actual = os.path.dirname(os.path.abspath(__file__))
+            directorio_actual = DIRECTORIO_APP
             archivo_config = os.path.join(directorio_actual, "config.txt")
             
             with open(archivo_config, 'w') as f:
@@ -1794,7 +1803,7 @@ class MouseConfigApp:
     def guardar_configuracion_silenciosa(self):
         """Guarda la configuración silenciosamente (para cierre)"""
         try:
-            directorio_actual = os.path.dirname(os.path.abspath(__file__))
+            directorio_actual = DIRECTORIO_APP
             archivo_config = os.path.join(directorio_actual, "config.txt")
             
             with open(archivo_config, 'w') as f:
@@ -1818,7 +1827,7 @@ class MouseConfigApp:
     def cargar_configuracion(self):
         """Carga la configuración desde archivo"""
         try:
-            directorio_actual = os.path.dirname(os.path.abspath(__file__))
+            directorio_actual = DIRECTORIO_APP
             archivo_config = os.path.join(directorio_actual, "config.txt")
             
             if not os.path.exists(archivo_config):

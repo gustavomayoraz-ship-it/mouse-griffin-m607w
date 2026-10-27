@@ -1,0 +1,49 @@
+name: Compilar .exe (Windows, Python 3.14)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller pydirectinput pynput psutil pystray Pillow pywin32
+
+      - name: Compilar
+        run: >
+          pyinstaller --noconfirm --onefile --noconsole
+          --name MouseGriffin
+          --hidden-import pystray._win32
+          --hidden-import win32com.client
+          --hidden-import win32gui
+          --hidden-import win32process
+          --collect-submodules pynput
+          mouse.py
+
+      - name: Probar que el .exe existe
+        run: dir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MouseGriffin-exe
+          path: dist/MouseGriffin.exe
+
+      - name: Publicar en Releases (solo con tag v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/MouseGriffin.exe
